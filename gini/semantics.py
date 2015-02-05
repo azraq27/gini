@@ -66,11 +66,11 @@ def best_match_from_list(item,options,fuzzy=90,fname_match=True,fuzzy_fragment=N
 
 def match_and_classify(item,option_dict,fuzzy=90,fname_match=True,fuzzy_fragment=None,guess=False):
     '''Takes a dict where keys are an abstract name of a type, and the values are lists of
-    examples (name of type is always included). Will try to match the ``item`` to one of the examples, and then return a tuple
+    examples (name of type is not included). Will try to match the ``item`` to one of the examples, and then return a tuple
     of the matching (type,example). If ``fname_match``, and no good match can be found in ``option_dict``,
     will try to glob-match a filename and return type of ``file`` for any matches'''
     
-    examples = [a for b in option_dict.values() for a in b] + option_dict.keys()
+    examples = [a for b in option_dict.values() for a in b]
     best_match_i = best_match_from_list(item,examples,fuzzy,fname_match,fuzzy_fragment,guess)
     if best_match_i!=None:
         best_match = examples[best_match_i]
@@ -97,16 +97,16 @@ class Bottle(object):
         self.guess = False
     
     def process(self,string):
-        '''Searches the string for an action word (using ``vocab`` and ``actions``), then calls the appropriate function with a dictionary
+        '''Searches the string (or list of strings) for an action word (using ``vocab`` and ``actions``), then calls the appropriate function with a dictionary
         of the remaining identified words (according to ``vocab``).
         
         For example, if you have your ``actions`` and ``vocab`` set like::
         
             bottle.actions = {'print':print_me}
             bottle.vocab = {
-                'print': ['show','list','blah'],
-                'say': ['speak','sprechen'],
-                'money': ['moolah','cash','denaros'],
+                'print': ['print','show','list','blah'],
+                'say': ['say','speak','sprechen'],
+                'money': ['money','moolah','cash','denaros'],
                 'self': ['me','user']
             }
         
@@ -120,7 +120,10 @@ class Bottle(object):
         
         '''
         action = None
-        items = string.split()
+        if isinstance(string,list):
+            items = string
+        else:
+            items = string.split()
         item_dict = {}
         for item in items:
             c = match_and_classify(item,self.vocab,self.fuzzy,self.fname_match,self.fuzzy_fragment,self.guess)
