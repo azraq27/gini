@@ -96,6 +96,24 @@ class Bottle(object):
         self.fuzzy_fragment = None
         self.guess = False
     
+    def parse_string(self,string):
+        if isinstance(string,list):
+            items = string
+        else:
+            items = string.split()
+        item_dict = {}
+        for item in items:
+            c = match_and_classify(item,self.vocab,self.fuzzy,self.fname_match,self.fuzzy_fragment,self.guess)
+            if c:
+                if c[0] not in item_dict:
+                    item_dict[c[0]] = []
+                item_dict[c[0]].append(c[1])
+            else:
+                if 'other' not in item_dict:
+                    item_dict['other'] = []
+                item_dict['other'].append(item)
+        return item_dict
+    
     def process(self,string):
         '''Searches the string (or list of strings) for an action word (using ``vocab`` and ``actions``), then calls the appropriate function with a dictionary
         of the remaining identified words (according to ``vocab``).
@@ -119,24 +137,8 @@ class Bottle(object):
             print_me({'money': ['money'], 'self': ['me'], 'other': ['the']})
         
         '''
-        action = None
-        if isinstance(string,list):
-            items = string
-        else:
-            items = string.split()
-        item_dict = {}
-        for item in items:
-            c = match_and_classify(item,self.vocab,self.fuzzy,self.fname_match,self.fuzzy_fragment,self.guess)
-            if c:
-                if c[0] in self.actions and not action:
-                    action = self.actions[c[0]]
-                else:
-                    if c[0] not in item_dict:
-                        item_dict[c[0]] = []
-                    item_dict[c[0]].append(c[1])
-            else:
-                if 'other' not in item_dict:
-                    item_dict['other'] = []
-                item_dict['other'].append(item)
-        if action:
-            action(item_dict)
+        item_dict = self.parse_string(string)
+        print item_dict
+        for item in item_dict:
+            if item in self.actions:
+                self.actions[item](item_dict)
