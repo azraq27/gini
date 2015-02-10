@@ -1,8 +1,11 @@
 from distutils.core import setup
+
+version = '0.6.1'
+
 setup(
   name = 'gini',
   packages = ['gini'], # this must be the same as the name above
-  version = '0.6',
+  version = version,
   description = 'The un-intelligent Python AI library',
   long_description = '''Gini stands for "Gini is not intelligent." The library is for making tools that probably fall under the general field of AI, for people who don't care about AI.
 
@@ -12,7 +15,7 @@ Put another way, these are functions to help my scripts be polite, and act flexi
   author = 'Bill Gross',
   author_email = 'bill.gross@me.com',
   url = 'https://github.com/azraq27/gini',
-  download_url = 'https://github.com/azraq27/gini/tarball/0.6',
+  download_url = 'https://github.com/azraq27/gini/tarball/' + version,
   keywords = ['AI'],
   classifiers = [
       'Topic :: Scientific/Engineering',
