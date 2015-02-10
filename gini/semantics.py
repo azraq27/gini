@@ -21,6 +21,9 @@ class Concept(object):
         #: [return value] The degree of match (when using fuzzy matching)
         self.match_amount = None
     
+    def __repr__(self):
+        return 'Concept(%s)' % self.name
+    
     def match_string(self,string,fuzzy=90,fname_match=True,fuzzy_fragment=None,guess=False):
         m = best_match_from_list(string,self.examples,fuzzy,fname_match,fuzzy_fragment,guess)
         if m:
@@ -104,7 +107,7 @@ class Bottle(object):
         
         Would result in this function being called::
         
-            print_me({'money': [Concept('money')], 'self': [Concept('me')], 'other': ['the']})
+            print_me({'print': [Concept(print)], 'money': [Concept(money)], 'self': [Concept(self)], 'other': ['the']})
         
         '''
         item_dict = self.matches_from(string)
