@@ -40,6 +40,8 @@ class Bottle(object):
         self.fuzzy = 90
         self.fuzzy_fragment = None
         self.guess = False
+        #: Allow the use of "not" and a "-" before a term to negate the term
+        self.negative = True
     
     def match_word(self,string):
         multipliers = {'exact':10**5,'fname':10**4,'fuzzy':10**2,'fuzzy_fragment':1}
@@ -58,9 +60,19 @@ class Bottle(object):
         else:
             items = string.split()
         item_dict = {}
+        not_next = False
         for item in items:
+            if self.negative:
+                if item=='not':
+                    not_next = True
+                    continue
+                if item[0]=='-':
+                    not_next = True
+                    item = item[1:]
             concept = self.match_word(item)
             if concept:
+                if not_next:
+                    concept.negative = True
                 if concept.name not in item_dict:
                     item_dict[concept.name] = []
                 item_dict[concept.name].append(concept)
@@ -68,6 +80,7 @@ class Bottle(object):
                 if 'other' not in item_dict:
                     item_dict['other'] = []
                 item_dict['other'].append(item)
+            not_next = False
         return item_dict
     
     def process(self,string):

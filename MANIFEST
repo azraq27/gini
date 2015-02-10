@@ -2,5 +2,6 @@
 setup.cfg
 setup.py
 gini/__init__.py
+gini/matching.py
 gini/personality.py
 gini/semantics.py
