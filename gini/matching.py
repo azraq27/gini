@@ -26,6 +26,8 @@ def matches_from_list(item,options,fuzzy=90,fname_match=True,fuzzy_fragment=None
     # Exact matches
     if item in options:
         matches += [(options[i],i,'exact',None) for i in xrange(len(options)) if options[i].lower()==item.lower()]
+        # If we have exact matches, don't bother with fuzzy matching
+        return matches
     
     # Filename-style matches
     if fname_match:

@@ -14,4 +14,13 @@ bottle.vocab = [
     Concept('self', ['me','user'])
 ]
 
-bottle.process('Show me the money')
+string = 'Show me the money'
+print 'Processing string "%s"' % string
+bottle.process_string(string)
+print ''
+
+bottle.guess = True
+for search in ['m*','mool','rechen']:
+    print 'Searching for examples matching "%s"' % search
+    print bottle.match_all_concepts(search)
+    print ''
